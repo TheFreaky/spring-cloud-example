@@ -1,0 +1,29 @@
+zuul:
+  prefix: /api
+  ignoredServices: "*"
+  routes:
+    user:
+      path: /cat/**
+      serviceId: cat
+    country:
+      path: /country/**
+      serviceId: country
+    about:
+      path: /about/**
+      servcieId: about
+
+spring.application.name: zuul-gateway-service
+server.port: 8080
+eureka:
+  client:
+    service-url.defaultZone: http://localhost:8761/eureka
+#  instance.prefer-ip-address: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 60000
