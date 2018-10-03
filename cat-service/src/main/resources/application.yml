@@ -1,0 +1,23 @@
+spring.application.name: cat
+server.port: 0
+
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka
+#eureka.instance.prefer-ip-address=true
+
+spring.rabbitmq:
+  listener.concurrency: 5
+  username: guest
+  password: guest
+  host: localhost
+
+spring.datasource:
+  url: jdbc:postgresql://localhost:5432/postgres
+  username: postgres
+  password: lolxaxlol
+
+cats.get.request.url: https://api.thecatapi.com/v1/images/search
+
+messaging:
+  exchange: spring-cloud-example
+  queue: cat-service
+  routing-key: cat-event

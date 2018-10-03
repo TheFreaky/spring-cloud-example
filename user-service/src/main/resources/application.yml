@@ -1,0 +1,22 @@
+spring.application.name: about
+
+server.port: 0
+
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka
+#eureka.instance.prefer-ip-address=true
+
+spring.rabbitmq:
+  listener.concurrency: 5
+  username: guest
+  password: guest
+  host: localhost
+
+spring.datasource:
+  url: jdbc:postgresql://localhost:5432/postgres
+  username: postgres
+  password: lolxaxlol
+
+messaging:
+  exchange: spring-cloud-example
+  queue: user-service
+  routing-key: user-event

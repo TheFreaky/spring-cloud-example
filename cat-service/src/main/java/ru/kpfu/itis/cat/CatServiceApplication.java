@@ -1,17 +1,14 @@
-package ru.itis.gateway.app;
+package ru.kpfu.itis.cat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableSwagger2
-@EnableZuulProxy
 @SpringBootApplication
 @EnableEurekaClient
-public class ZuulApplication {
+public class CatServiceApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(ZuulApplication.class);
+        SpringApplication.run(CatServiceApplication.class, args);
     }
 }
