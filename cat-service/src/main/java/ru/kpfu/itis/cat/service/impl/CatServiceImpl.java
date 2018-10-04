@@ -9,6 +9,8 @@ import ru.kpfu.itis.cat.service.CatService;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Service
 public class CatServiceImpl implements CatService {
@@ -22,6 +24,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public Optional<CatDto> getCat() {
         CatDto[] body = restTemplate.getForEntity(catsGetRequestUrl, CatDto[].class).getBody();
-        return Arrays.stream(body).findFirst();
+        return Arrays.stream(body)
+                .findFirst();
     }
 }

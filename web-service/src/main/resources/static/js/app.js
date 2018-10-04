@@ -1,17 +1,5 @@
 var stompClient = null;
 
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
-
 function connect() {
     // создаем объект SockJs
     var socket = new SockJS('/messages');
@@ -19,39 +7,37 @@ function connect() {
     stompClient = Stomp.over(socket);
     // при подключении
     stompClient.connect({}, function (frame) {
-        setConnected(true);
         console.log('Connected: ' + frame);
         // подписываемся на url
-        stompClient.subscribe('/topic/web', function (greeting) {
-            showGreeting(greeting);
+        var uuid = createUUID();
+        stompClient.subscribe('/topic/image/' + uuid + '/reply', function (greeting) {
+            showImg(greeting);
         });
-        stompClient.send("/app/hello", {});
+        stompClient.send("/app/image/" + uuid, {});
     });
 }
 
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-// отправка
-function sendName() {
-    // отправляем на определенный url
-    stompClient.send("/app/bye", {}, $("#name").val());
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+function showImg(message) {
+    $("#image").attr('src', message.body);
+    $("#image-input").attr('value', message.body);
 }
 
 $(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
+    $("#connect").click(function () {
+        connect();
     });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
 });
+
+function createUUID() {
+    // http://www.ietf.org/rfc/rfc4122.txt
+    var s = [];
+    var hexDigits = "0123456789ABCDEF";
+    for (var i = 0; i < 32; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[12] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+    s[16] = hexDigits.substr((s[16] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+
+    var uuid = s.join("");
+    return uuid;
+}

@@ -19,5 +19,9 @@ cats.get.request.url: https://api.thecatapi.com/v1/images/search
 
 messaging:
   exchange: spring-cloud-example
-  queue: cat-service
-  routing-key: cat-event
+  queues:
+    get: cat-service-get
+    send: cat-service-send
+  routing-keys:
+    get: cat-get-event
+    send: cat-send-event

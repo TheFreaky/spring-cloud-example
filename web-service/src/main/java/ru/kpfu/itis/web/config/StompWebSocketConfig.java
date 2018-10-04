@@ -16,7 +16,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // URL для подписок
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic/");
         // куда отправляем сообщения
         config.setApplicationDestinationPrefixes("/app");
     }

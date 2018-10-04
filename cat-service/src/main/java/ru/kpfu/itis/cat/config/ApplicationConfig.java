@@ -1,8 +1,8 @@
 package ru.kpfu.itis.cat.config;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +13,14 @@ public class ApplicationConfig {
 
     @Value("${messaging.exchange}")
     String exchangeName;
-    @Value("${messaging.queue}")
-    String queueName;
-    @Value("${messaging.routing-key}")
-    String routingKeyName;
+    @Value("${messaging.queues.get}")
+    String queueGetName;
+    @Value("${messaging.queues.send}")
+    String queueSendName;
+    @Value("${messaging.routing-keys.get}")
+    String routingKeyGetName;
+    @Value("${messaging.routing-keys.send}")
+    String routingKeySendName;
 
     @Bean
     public RestTemplate restTemplate() {
@@ -25,25 +29,32 @@ public class ApplicationConfig {
 
     @Bean
     public Exchange exchange() {
-        return new DirectExchange(exchangeName);
+        return new TopicExchange(exchangeName);
     }
 
     @Bean
-    public Queue queue() {
-        return new Queue(queueName);
+    public Queue queueGet() {
+        return new Queue(queueGetName);
     }
 
     @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(queue()).to(exchange()).with(routingKeyName).noargs();
+    public Queue queueSend() {
+        return new Queue(queueSendName);
     }
 
     @Bean
-    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
-        return container;
+    public Binding bindingGet() {
+        return BindingBuilder.bind(queueGet()).to(exchange()).with(routingKeyGetName).noargs();
+    }
+
+     @Bean
+    public Binding bindingSend() {
+        return BindingBuilder.bind(queueSend()).to(exchange()).with(routingKeySendName).noargs();
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
 }
