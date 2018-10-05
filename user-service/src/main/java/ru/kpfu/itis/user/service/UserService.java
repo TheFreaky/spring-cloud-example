@@ -1,5 +1,6 @@
 package ru.kpfu.itis.user.service;
 
+import ru.kpfu.itis.user.dto.UserDto;
 import ru.kpfu.itis.user.model.User;
 
 import java.util.List;
@@ -7,5 +8,5 @@ import java.util.List;
 public interface UserService {
     List<User> getAll();
 
-    void save(User dto);
+    void save(UserDto dto);
 }

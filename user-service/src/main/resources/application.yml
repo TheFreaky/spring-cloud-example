@@ -1,5 +1,4 @@
 spring.application.name: user
-
 server.port: 0
 
 eureka.client.service-url.defaultZone: http://localhost:8761/eureka
@@ -20,6 +19,7 @@ messaging:
   exchange: spring-cloud-example
   queue: user-service
   routing-key: user-event
+
 spring:
   jpa:
     hibernate:
