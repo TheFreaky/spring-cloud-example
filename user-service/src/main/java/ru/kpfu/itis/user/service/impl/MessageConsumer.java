@@ -12,7 +12,7 @@ public class MessageConsumer {
     @Autowired
     private UserService userService;
 
-    @RabbitListener(queues = "${messaging.queue}")
+    @RabbitListener(queues = "${messaging.user.queue}")
     public void process(UserDto dto) {
         userService.save(dto);
     }

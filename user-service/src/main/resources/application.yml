@@ -17,8 +17,9 @@ spring.datasource:
 
 messaging:
   exchange: spring-cloud-example
-  queue: user-service
-  routing-key: user-event
+  user:
+    queue: user-service
+    routing-key: user-event
 
 spring:
   jpa:
