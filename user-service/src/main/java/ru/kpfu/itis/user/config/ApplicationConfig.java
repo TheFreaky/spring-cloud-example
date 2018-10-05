@@ -34,7 +34,7 @@ public class ApplicationConfig {
 
     @Bean
     public Exchange exchange() {
-        return new DirectExchange(exchangeName);
+        return new TopicExchange(exchangeName);
     }
 
     @Bean

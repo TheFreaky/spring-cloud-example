@@ -1,4 +1,4 @@
-spring.application.name: about
+spring.application.name: user
 
 server.port: 0
 
@@ -20,3 +20,7 @@ messaging:
   exchange: spring-cloud-example
   queue: user-service
   routing-key: user-event
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
