@@ -2,7 +2,6 @@ spring.application.name: cat
 server.port: 0
 
 eureka.client.service-url.defaultZone: http://localhost:8761/eureka
-#eureka.instance.prefer-ip-address=true
 
 spring.rabbitmq:
   listener.concurrency: 5
@@ -19,9 +18,9 @@ cats.get.request.url: https://api.thecatapi.com/v1/images/search
 
 messaging:
   exchange: spring-cloud-example
-  queues:
-    get: cat-service-get
-    send: cat-service-send
-  routing-keys:
-    get: cat-get-event
-    send: cat-send-event
+  cat-creation:
+    queue: cat-service-get
+    routing-key: cat-get-event
+  cat-reply:
+    queue: cat-service-send
+    routing-key: cat-send-event
