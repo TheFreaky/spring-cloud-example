@@ -11,7 +11,7 @@ messaging:
   cat-creation:
     routing-key: cat-get-event
   cat-reply:
-    queue: cat-service-send
+    queue: cat-service-reply
   user:
     routing-key: user-event
 

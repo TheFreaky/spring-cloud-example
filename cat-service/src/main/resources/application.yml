@@ -22,5 +22,5 @@ messaging:
     queue: cat-service-get
     routing-key: cat-get-event
   cat-reply:
-    queue: cat-service-send
-    routing-key: cat-send-event
+    queue: cat-service-reply
+    routing-key: cat-reply-event
