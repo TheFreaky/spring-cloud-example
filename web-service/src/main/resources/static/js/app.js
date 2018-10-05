@@ -1,14 +1,10 @@
 var stompClient = null;
 
 function connect() {
-    // создаем объект SockJs
     var socket = new SockJS('/messages');
-    // создаем stomp-клиент поверх sockjs
     stompClient = Stomp.over(socket);
-    // при подключении
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        // подписываемся на url
         var uuid = createUUID();
         stompClient.subscribe('/topic/image/' + uuid + '/reply', function (greeting) {
             showImg(greeting);

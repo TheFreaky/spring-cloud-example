@@ -8,7 +8,12 @@ spring.rabbitmq:
 
 messaging:
   exchange: spring-cloud-example
-  queues:
-    get: cat-service-get
-    send: cat-service-send
-  routing-key: cat-event
+  cat-creation:
+    routing-key: cat-get-event
+  cat-reply:
+    queue: cat-service-send
+  user:
+    routing-key: user-event
+
+zuul.url: http://localhost:8090
+user.get-all.url: ${zuul.url}/api/users

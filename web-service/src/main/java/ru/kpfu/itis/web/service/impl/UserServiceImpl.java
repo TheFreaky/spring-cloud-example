@@ -1,6 +1,7 @@
 package ru.kpfu.itis.web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.kpfu.itis.web.dto.UserDto;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${user.get-all.url}")
+    private String getAllUsersUrl;
+
     @Override
     public void registerUser(UserDto userDto) {
         messageService.registerUser(userDto);
@@ -25,9 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        String zuulUrl = "http://localhost:8090";
-        String getAllUserPath = "/api/users";
-//        restTemplate.getForEntity()
-        return Arrays.asList(restTemplate.getForObject(zuulUrl + getAllUserPath, UserDto[].class));
+        return Arrays.asList(restTemplate.getForObject(getAllUsersUrl, UserDto[].class));
     }
 }

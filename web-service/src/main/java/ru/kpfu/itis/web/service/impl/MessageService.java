@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import ru.kpfu.itis.web.config.property.MessagingProperties;
 import ru.kpfu.itis.web.dto.CatDto;
 import ru.kpfu.itis.web.dto.UserDto;
 
@@ -17,21 +18,25 @@ public class MessageService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private MessagingProperties messagingProperties;
+
     public void getImage(String userId) {
         CatDto dto = CatDto.builder()
                 .id(userId)
                 .build();
-        // ToDo: to property
-        rabbitTemplate.convertAndSend("spring-cloud-example", "cat-get-event", dto);
+        rabbitTemplate.convertAndSend(messagingProperties.getExchange(),
+                messagingProperties.getCatCreation().getRoutingKey(), dto);
     }
 
-    @RabbitListener(queues = "cat-service-send")
+    @RabbitListener(queues = "${messaging.cat-reply.queue}")
     public void sendImage(CatDto catDto) {
         String id = catDto.getId();
         messagingTemplate.convertAndSend("/topic/image/" + id + "/reply", catDto.getUrl());
     }
 
     public void registerUser(UserDto userDto) {
-        rabbitTemplate.convertAndSend("spring-cloud-example", "user-event", userDto);
+        rabbitTemplate.convertAndSend(messagingProperties.getExchange(),
+                messagingProperties.getUser().getRoutingKey(), userDto);
     }
 }
