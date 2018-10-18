@@ -1,0 +1,63 @@
+version: '3.3'
+
+services:
+  registry:
+    build: service-registry
+    ports:
+    - "8761:8761"
+    restart: always
+
+  cat-service:
+    build: cat-service
+    depends_on:
+    - rabbit
+    - registry
+    restart: always
+
+  user-service:
+    build: user-service
+    depends_on:
+    - rabbit
+    - db
+    - registry
+    restart: always
+
+  gateway:
+    build: zuul-service
+    depends_on:
+    - registry
+    ports:
+    - "8090:8090"
+    restart: always
+
+  web-service:
+    build: web-service
+    depends_on:
+    - rabbit
+    - gateway
+    ports:
+    - "8080:8080"
+    restart: always
+
+  db:
+    image: postgres
+    ports:
+    - "5432:5432"
+    volumes:
+      - /home/maxim/Docker/postgres/data:/var/lib/postgresql/data
+    environment:
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_USER=postgres
+    - POSTGRES_DB=test
+
+  rabbit:
+    image: rabbitmq:3.7-management
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    volumes:
+    - /home/maxim/Docker/RabbitMq/data:/var/lib/rabbitmq
+    - /home/maxim/Docker/RabbitMq/data/logs:/var/log/rabbitmq
+    environment:
+    - RABBITMQ_LOGS=/var/log/rabbitmq/rabbit.log
+    - RABBITMQ_USE_LONGNAME=true

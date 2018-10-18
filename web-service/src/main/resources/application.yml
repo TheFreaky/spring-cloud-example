@@ -4,11 +4,16 @@ spring.rabbitmq:
   listener.simple.concurrency: 5
   username: guest
   password: guest
-  host: localhost
+  host: rabbit
 
 messaging:
   exchange: spring-cloud-example
-  queues:
-    get: cat-service-get
-    send: cat-service-send
-  routing-key: cat-event
+  cat-creation:
+    routing-key: cat-get-event
+  cat-reply:
+    queue: cat-service-reply
+  user:
+    routing-key: user-event
+
+zuul.url: http://gateway:8090
+user.get-all.url: ${zuul.url}/api/users

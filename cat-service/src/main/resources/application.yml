@@ -1,27 +1,20 @@
 spring.application.name: cat
-server.port: 0
 
-eureka.client.service-url.defaultZone: http://localhost:8761/eureka
-#eureka.instance.prefer-ip-address=true
+eureka.client.service-url.defaultZone: http://registry:8761/eureka
 
 spring.rabbitmq:
   listener.concurrency: 5
   username: guest
   password: guest
-  host: localhost
-
-spring.datasource:
-  url: jdbc:postgresql://localhost:5432/postgres
-  username: postgres
-  password: lolxaxlol
+  host: rabbit
 
 cats.get.request.url: https://api.thecatapi.com/v1/images/search
 
 messaging:
   exchange: spring-cloud-example
-  queues:
-    get: cat-service-get
-    send: cat-service-send
-  routing-keys:
-    get: cat-get-event
-    send: cat-send-event
+  cat-creation:
+    queue: cat-service-get
+    routing-key: cat-get-event
+  cat-reply:
+    queue: cat-service-reply
+    routing-key: cat-reply-event

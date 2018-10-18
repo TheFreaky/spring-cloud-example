@@ -13,7 +13,7 @@ public class MessageController {
     private MessageService messageService;
 
     @MessageMapping("/image/{userId}")
-    public void getImage(Message<?> message, @DestinationVariable("userId") String userId) {
+    public void sendEventToCreateCatImage(@DestinationVariable("userId") String userId) {
         messageService.getImage(userId);
     }
 }
