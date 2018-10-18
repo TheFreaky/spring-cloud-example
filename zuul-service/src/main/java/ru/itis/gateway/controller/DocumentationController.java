@@ -1,4 +1,4 @@
-package ru.itis.gateway.app;
+package ru.itis.gateway.controller;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Primary;
