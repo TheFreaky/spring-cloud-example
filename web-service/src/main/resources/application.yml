@@ -17,3 +17,4 @@ messaging:
 
 zuul.url: http://localhost:8090
 user.get-all.url: ${zuul.url}/api/users
+auth.url: ${zuul.url}/api/auth

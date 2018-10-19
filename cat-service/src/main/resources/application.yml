@@ -1,5 +1,6 @@
 spring.application.name: cat
 
+
 eureka.client.service-url.defaultZone: http://localhost:8761/eureka
 
 spring.rabbitmq:
@@ -18,3 +19,5 @@ messaging:
   cat-reply:
     queue: cat-service-reply
     routing-key: cat-reply-event
+server:
+  port: 0

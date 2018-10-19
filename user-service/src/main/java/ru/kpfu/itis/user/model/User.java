@@ -23,4 +23,6 @@ public class User {
 
     private String name;
     private String imgUrl;
+    private String username;
+    private String password;
 }
