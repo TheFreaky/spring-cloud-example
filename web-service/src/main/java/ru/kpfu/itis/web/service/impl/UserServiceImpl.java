@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAll(String authHeaderValue) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", authHeaderValue);
-        ResponseEntity<UserDto[]> userResponse = restTemplate.exchange(getAllUsersUrl, HttpMethod.GET, new HttpEntity<>(headers.toSingleValueMap()), UserDto[].class);
+        ResponseEntity<UserDto[]> userResponse = restTemplate.exchange(getAllUsersUrl, HttpMethod.GET, new HttpEntity<>(null, headers), UserDto[].class);
         return Arrays.asList(userResponse.getBody());
     }
 

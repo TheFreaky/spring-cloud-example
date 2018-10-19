@@ -9,6 +9,7 @@ import ru.kpfu.itis.user.repository.UserRepository;
 import ru.kpfu.itis.user.service.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,7 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return userRepository.findAll();
+        return userRepository.findAll().stream()
+                .peek(user -> user.setPassword(null))
+                .collect(Collectors.toList());
     }
 
     @Override

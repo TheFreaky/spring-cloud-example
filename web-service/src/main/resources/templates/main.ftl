@@ -26,6 +26,14 @@
                     <img src="" id="image" class="img-responsive img-thumbnail"/>
                     <input hidden id="image-input" name="imgUrl"/>
                 </div>
+                <div class="form-group">
+                    <label for="username">Enter username:</label>
+                    <input type="text" name="username" class="form-control" placeholder="Your username here..."/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Enter password:</label>
+                    <input type="password" name="password" class="form-control" placeholder="Your password here..."/>
+                </div>
                 <button type="submit"  class="btn btn-default">Register</button>
             </form>
         </div>

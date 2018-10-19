@@ -15,7 +15,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = HttpClientErrorException.class)
     protected void handleHttpException(HttpServletResponse response, HttpClientErrorException ex) throws IOException {
-        response.sendRedirect("/error");
+        response.sendRedirect("/ui/error");
     }
 
 }
