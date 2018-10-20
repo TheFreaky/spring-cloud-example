@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.kpfu.itis.auth.config.properties.JwtConfig;
+import ru.kpfu.itis.auth.config.properties.JwtProperties;
 import ru.kpfu.itis.auth.security.filter.JwtUsernameAndPasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private JwtProperties jwtProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,12 +40,12 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 // What's the authenticationManager()?
                 // An object provided by WebSecurityConfigurerAdapter, used to authenticate the user passing user's credentials
                 // The filter needs this auth manager to authenticate the user.
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
-                //ToDo add filter that validate token. Get username, check in redis black list.
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProperties))
+                //ToDo add filter that validate token.
                 .authorizeRequests()
                 // allow all POST requests
-                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-//                .antMatchers(HttpMethod.GET, jwt.getValidateUrl()).permitAll()
+                .antMatchers(HttpMethod.POST, jwtProperties.getUrl()).permitAll()
+                .antMatchers(HttpMethod.GET, "/token/validate").permitAll()
                 // any other requests must be authenticated
                 .anyRequest().authenticated();
     }
@@ -59,8 +59,8 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
+    public JwtProperties jwtConfig() {
+        return new JwtProperties();
     }
 
     @Bean

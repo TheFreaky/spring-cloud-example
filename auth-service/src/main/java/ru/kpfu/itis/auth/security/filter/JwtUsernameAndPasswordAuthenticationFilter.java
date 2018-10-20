@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.kpfu.itis.auth.config.properties.JwtConfig;
+import ru.kpfu.itis.auth.config.properties.JwtProperties;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +27,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     // We use auth manager to validate the user credentials
     private AuthenticationManager authManager;
 
-    private final JwtConfig jwtConfig;
+    private final JwtProperties jwtProperties;
 
-    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtConfig jwtConfig) {
+    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtProperties jwtProperties) {
         this.authManager = authManager;
-        this.jwtConfig = jwtConfig;
+        this.jwtProperties = jwtProperties;
 
         // By default, UsernamePasswordAuthenticationFilter listens to "/login" path.
         // In our case, we use "/auth". So, we need to override the defaults.
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getUri(), "POST"));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtProperties.getUrl(), HttpMethod.POST.name()));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                             FilterChain chain, Authentication auth) {
 
         Long now = System.currentTimeMillis();
-        Date expiration = new Date(now + jwtConfig.getExpiration() * 1000);
+        Date expiration = new Date(now + jwtProperties.getExpiration() * 1000);
         String token = Jwts.builder()
                 .setSubject(auth.getName())
                 // Convert to list of strings.
@@ -73,13 +74,13 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .setIssuedAt(new Date(now))
                 .setExpiration(expiration)  // in milliseconds
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
+                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret().getBytes())
                 .compact();
 
         //ToDo add expiration date in redis
 
         // Add token to header
-        response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
+        response.addHeader(jwtProperties.getHeader(), jwtProperties.getPrefix() + token);
     }
 
     @Data

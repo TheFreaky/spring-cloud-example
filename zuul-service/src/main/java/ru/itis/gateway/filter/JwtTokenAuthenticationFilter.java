@@ -2,9 +2,13 @@ package ru.itis.gateway.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.itis.gateway.config.properties.JwtProperties;
 
@@ -19,21 +23,21 @@ import java.util.stream.Collectors;
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProperties jwtProperties;
+    private final RestTemplate restTemplate;
 
-    public JwtTokenAuthenticationFilter(JwtProperties jwtProperties) {
+    public JwtTokenAuthenticationFilter(JwtProperties jwtProperties, RestTemplate restTemplate) {
         this.jwtProperties = jwtProperties;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // 1. get the authentication header. Tokens are supposed to be passed in the authentication header
         String header = request.getHeader(jwtProperties.getHeader());
 
-        // 2. validate the header and check the prefix
-        if(header == null || !header.startsWith(jwtProperties.getPrefix())) {
-            chain.doFilter(request, response);  		// If not valid, go to the next filter.
+        if (StringUtils.isEmpty(header) || !header.startsWith(jwtProperties.getPrefix())) {
+            chain.doFilter(request, response);        // If not valid, go to the next filter.
             return;
         }
 
@@ -43,29 +47,35 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         // All secured paths that needs a token are already defined and secured in config class.
         // And If user tried to access without access token, then he won't be authenticated and an exception will be thrown.
 
-        // 3. Get the token
         String token = header.replace(jwtProperties.getPrefix(), "");
 
-        try {	// exceptions might be thrown in creating the claims if for example the token is expired
+        try {
+            restTemplate.getForEntity("http://AUTH/token/validate?token={token}", Void.class, token);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                SecurityContextHolder.clearContext();
+                chain.doFilter(request, response);
+            }
+        }
 
-            // 4. Validate the token
+        try {    // exceptions might be thrown in creating the claims if for example the token is expired
+
+            // Validate the token
             Claims claims = Jwts.parser()
                     .setSigningKey(jwtProperties.getSecret().getBytes())
                     .parseClaimsJws(token)
                     .getBody();
 
             String username = claims.getSubject();
-            if(username != null) {
+            if (username != null) {
                 List<String> authorities = (List<String>) claims.get("authorities");
 
-                // 5. Create auth object
+                // Create auth object
                 // UsernamePasswordAuthenticationToken: A built-in object, used by spring to represent the current authenticated / being authenticated user.
                 // It needs a list of authorities, which has type of GrantedAuthority interface, where SimpleGrantedAuthority is an implementation of that interface
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
-                // 6. Authenticate the user
-                // Now, user is authenticated
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
 
@@ -74,7 +84,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
         }
 
-        // go to the next filter in the filter chain
         chain.doFilter(request, response);
     }
 

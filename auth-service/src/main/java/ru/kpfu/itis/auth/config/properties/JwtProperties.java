@@ -4,9 +4,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 
 @Data
-public class JwtConfig {
-    @Value("${security.jwt.uri:/auth/**}")
-    private String Uri;
+public class JwtProperties {
+    @Value("${security.jwt.url:/auth/**}")
+    private String url;
 
     @Value("${security.jwt.header:Authorization}")
     private String header;
