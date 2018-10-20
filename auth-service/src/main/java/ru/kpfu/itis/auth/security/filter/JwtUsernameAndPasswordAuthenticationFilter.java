@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.kpfu.itis.auth.config.properties.JwtProperties;
+import ru.kpfu.itis.auth.repository.UserTokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +27,13 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
     // We use auth manager to validate the user credentials
     private AuthenticationManager authManager;
-
     private final JwtProperties jwtProperties;
+    private final UserTokenRepository userTokenRepository;
 
-    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtProperties jwtProperties) {
+    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtProperties jwtProperties, UserTokenRepository userTokenRepository) {
         this.authManager = authManager;
         this.jwtProperties = jwtProperties;
+        this.userTokenRepository = userTokenRepository;
 
         // By default, UsernamePasswordAuthenticationFilter listens to "/login" path.
         // In our case, we use "/auth". So, we need to override the defaults.
@@ -77,7 +79,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret().getBytes())
                 .compact();
 
-        //ToDo add expiration date in redis
+        userTokenRepository.save(auth.getName(), expiration.getTime());
 
         // Add token to header
         response.addHeader(jwtProperties.getHeader(), jwtProperties.getPrefix() + token);

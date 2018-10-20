@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.kpfu.itis.auth.config.properties.JwtProperties;
+import ru.kpfu.itis.auth.repository.UserTokenRepository;
 import ru.kpfu.itis.auth.security.filter.JwtUsernameAndPasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,9 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtProperties jwtProperties;
+
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,7 +44,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 // What's the authenticationManager()?
                 // An object provided by WebSecurityConfigurerAdapter, used to authenticate the user passing user's credentials
                 // The filter needs this auth manager to authenticate the user.
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProperties))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProperties, userTokenRepository))
                 //ToDo add filter that validate token.
                 .authorizeRequests()
                 // allow all POST requests
