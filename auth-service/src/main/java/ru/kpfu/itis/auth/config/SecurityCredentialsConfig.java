@@ -41,9 +41,11 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 // An object provided by WebSecurityConfigurerAdapter, used to authenticate the user passing user's credentials
                 // The filter needs this auth manager to authenticate the user.
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                //ToDo add filter that validate token. Get username, check in redis black list.
                 .authorizeRequests()
                 // allow all POST requests
                 .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
+//                .antMatchers(HttpMethod.GET, jwt.getValidateUrl()).permitAll()
                 // any other requests must be authenticated
                 .anyRequest().authenticated();
     }

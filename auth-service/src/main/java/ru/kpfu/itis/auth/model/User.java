@@ -1,4 +1,4 @@
-package ru.kpfu.itis.user.model;
+package ru.kpfu.itis.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

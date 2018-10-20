@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.user.dto.UserDto;
 import ru.kpfu.itis.user.model.User;
+import ru.kpfu.itis.user.model.UserState;
 import ru.kpfu.itis.user.repository.UserRepository;
 import ru.kpfu.itis.user.service.UserService;
 
@@ -33,6 +34,8 @@ public class UserServiceImpl implements UserService {
                 .name(userDto.getName())
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
+                .role("USER")
+                .state(UserState.OK)
                 .build();
         userRepository.save(user);
     }
