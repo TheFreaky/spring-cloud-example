@@ -1,5 +1,4 @@
 spring.application.name: user
-
 eureka.client.service-url.defaultZone: http://registry:8761/eureka
 
 spring.rabbitmq:
@@ -8,18 +7,19 @@ spring.rabbitmq:
   password: guest
   host: rabbit
 
-spring.datasource:
-  url: jdbc:postgresql://db:5432/test
-  username: postgres
-  password: password
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/test
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+  redis:
+    host: redis
 
 messaging:
   exchange: spring-cloud-example
   user:
     queue: user-service
     routing-key: user-event
-
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update

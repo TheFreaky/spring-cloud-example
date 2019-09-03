@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name = "app_user")
 @Data
@@ -23,4 +20,10 @@ public class User {
 
     private String name;
     private String imgUrl;
+    private String username;
+    private String password;
+    private String role;
+
+    @Enumerated
+    private UserState state;
 }

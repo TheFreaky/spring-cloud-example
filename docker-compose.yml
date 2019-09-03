@@ -14,11 +14,20 @@ services:
     - registry
     restart: always
 
+  auth-service:
+    build: auth-service
+    depends_on:
+    - db
+    - redis
+    - registry
+    restart: always
+
   user-service:
     build: user-service
     depends_on:
     - rabbit
     - db
+    - redis
     - registry
     restart: always
 
@@ -40,7 +49,7 @@ services:
     restart: always
 
   db:
-    image: postgres
+    image: postgres:10
     ports:
     - "5432:5432"
     volumes:
@@ -49,6 +58,15 @@ services:
     - POSTGRES_PASSWORD=password
     - POSTGRES_USER=postgres
     - POSTGRES_DB=test
+    restart: always
+
+  redis:
+    image: "redis:alpine"
+    ports:
+     - "6379:6379"
+    volumes:
+    - /home/maxim/Docker/redis/data:/data
+    restart: always
 
   rabbit:
     image: rabbitmq:3.7-management
@@ -61,3 +79,4 @@ services:
     environment:
     - RABBITMQ_LOGS=/var/log/rabbitmq/rabbit.log
     - RABBITMQ_USE_LONGNAME=true
+    restart: always

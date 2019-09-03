@@ -1,0 +1,23 @@
+spring.application.name: cat
+
+
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka
+
+spring.rabbitmq:
+  listener.concurrency: 5
+  username: guest
+  password: guest
+  host: localhost
+
+cats.get.request.url: https://api.thecatapi.com/v1/images/search
+
+messaging:
+  exchange: spring-cloud-example
+  cat-creation:
+    queue: cat-service-get
+    routing-key: cat-get-event
+  cat-reply:
+    queue: cat-service-reply
+    routing-key: cat-reply-event
+server:
+  port: 0

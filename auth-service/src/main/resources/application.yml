@@ -1,0 +1,10 @@
+spring.application.name: auth
+eureka.client.service-url.defaultZone: http://registry:8761/eureka
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/test
+    username: postgres
+    password: password
+  redis:
+    host: redis
