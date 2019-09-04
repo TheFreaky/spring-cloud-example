@@ -21,6 +21,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setApplicationDestinationPrefixes("/app");
     }
 
+    @Override
     public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
         // точка подключения клиента с серверу
         stompEndpointRegistry.addEndpoint("/messages").setAllowedOrigins("*").withSockJS();

@@ -1,8 +1,8 @@
 package ru.kpfu.itis.web.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.web.config.property.MessagingProperties;
@@ -10,16 +10,12 @@ import ru.kpfu.itis.web.dto.CatDto;
 import ru.kpfu.itis.web.dto.UserDto;
 
 @Service
+@RequiredArgsConstructor
 public class MessageService {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private MessagingProperties messagingProperties;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final RabbitTemplate rabbitTemplate;
+    private final MessagingProperties messagingProperties;
 
     public void getImage(String userId) {
         CatDto dto = CatDto.builder()

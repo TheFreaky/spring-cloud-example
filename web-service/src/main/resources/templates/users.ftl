@@ -20,7 +20,7 @@
                 <#if users??>
                     <#list users as user>
                         <tr>
-                        <#--<td>${user.id}</td>-->
+                            <#--<td>${user.id}</td>-->
                             <td scope="row">${user.name}</td>
                             <td><img src="${user.imgUrl}" class="img-responsive img-thumbnail"></td>
                         </tr>

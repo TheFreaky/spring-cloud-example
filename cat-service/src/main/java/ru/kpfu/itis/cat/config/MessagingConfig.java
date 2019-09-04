@@ -1,18 +1,18 @@
 package ru.kpfu.itis.cat.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.kpfu.itis.cat.config.property.MessagingProperties;
 
 @Configuration
+@RequiredArgsConstructor
 public class MessagingConfig {
 
-    @Autowired
-    private MessagingProperties messagingProperties;
+    private final MessagingProperties messagingProperties;
 
     @Bean
     public Exchange exchange() {

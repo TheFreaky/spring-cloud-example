@@ -1,6 +1,6 @@
 package ru.kpfu.itis.auth.security.details;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -14,13 +14,13 @@ import ru.kpfu.itis.auth.repository.UserRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         ru.kpfu.itis.auth.model.User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
 

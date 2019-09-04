@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private JwtProperties jwtProperties;
 

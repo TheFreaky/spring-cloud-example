@@ -1,6 +1,6 @@
 package ru.kpfu.itis.user.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +13,12 @@ import ru.kpfu.itis.user.service.UserService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final AdminService adminService;
 
-    @Autowired
-    private AdminService adminService;
 
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {

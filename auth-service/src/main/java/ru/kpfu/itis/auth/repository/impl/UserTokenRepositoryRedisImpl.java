@@ -1,17 +1,17 @@
 package ru.kpfu.itis.auth.repository.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.auth.repository.UserTokenRepository;
 
 @Repository
+@RequiredArgsConstructor
 public class UserTokenRepositoryRedisImpl implements UserTokenRepository {
 
     private static final String KEY = "user-token-expiration:";
 
-    @Autowired
-    private RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, Long> redisTemplate;
 
     @Override
     public void save(String username, Long expiry) {

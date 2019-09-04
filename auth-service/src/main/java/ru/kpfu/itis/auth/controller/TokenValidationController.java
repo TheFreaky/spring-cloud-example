@@ -1,17 +1,20 @@
 package ru.kpfu.itis.auth.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kpfu.itis.auth.security.service.TokenValidationService;
 
 @RestController
 @RequestMapping("/token/validate")
+@RequiredArgsConstructor
 public class TokenValidationController {
 
-    @Autowired
-    private TokenValidationService tokenValidationService;
+    private final TokenValidationService tokenValidationService;
 
     @GetMapping
     public ResponseEntity validateToken(@RequestParam("token") String token) {

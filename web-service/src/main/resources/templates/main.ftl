@@ -10,8 +10,8 @@
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
+        enabled. Please enable
+        Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-6">
@@ -34,7 +34,7 @@
                     <label for="password">Enter password:</label>
                     <input type="password" name="password" class="form-control" placeholder="Your password here..."/>
                 </div>
-                <button type="submit"  class="btn btn-default">Register</button>
+                <button type="submit" class="btn btn-default">Register</button>
             </form>
         </div>
     </div>
