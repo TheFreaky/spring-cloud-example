@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -18,17 +18,16 @@ import ru.kpfu.itis.auth.repository.UserTokenRepository;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    // We use auth manager to validate the user credentials
-    private AuthenticationManager authManager;
     private final JwtProperties jwtProperties;
     private final UserTokenRepository userTokenRepository;
+    // We use auth manager to validate the user credentials
+    private final AuthenticationManager authManager;
 
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtProperties jwtProperties, UserTokenRepository userTokenRepository) {
         this.authManager = authManager;
@@ -41,23 +40,18 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    @SneakyThrows
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        // 1. Get credentials from request
+        UserCredentials creds = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
 
-        try {
+        // 2. Create auth object (contains credentials) which will be used by auth manager
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                creds.getUsername(), creds.getPassword(), Collections.emptyList());
 
-            // 1. Get credentials from request
-            UserCredentials creds = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
+        // 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
+        return authManager.authenticate(authToken);
 
-            // 2. Create auth object (contains credentials) which will be used by auth manager
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    creds.getUsername(), creds.getPassword(), Collections.emptyList());
-
-            // 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
-            return authManager.authenticate(authToken);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // Upon successful authentication, generate a token.
@@ -66,7 +60,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication auth) {
 
-        Long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         Date expiration = new Date(now + jwtProperties.getExpiration() * 1000);
         String token = Jwts.builder()
                 .setSubject(auth.getName())

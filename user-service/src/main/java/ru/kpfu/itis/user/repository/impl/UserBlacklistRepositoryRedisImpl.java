@@ -1,6 +1,6 @@
 package ru.kpfu.itis.user.repository.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.user.repository.UserBlacklistRepository;
@@ -8,12 +8,12 @@ import ru.kpfu.itis.user.repository.UserBlacklistRepository;
 import java.util.Date;
 
 @Repository
+@RequiredArgsConstructor
 public class UserBlacklistRepositoryRedisImpl implements UserBlacklistRepository {
 
     private static final String KEY = "user-blacklist:";
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void save(String username, Date expiry) {

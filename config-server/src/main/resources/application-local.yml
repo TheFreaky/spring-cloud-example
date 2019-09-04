@@ -1,0 +1,21 @@
+server.port: 8888
+spring.application.name: config-server
+
+spring.cloud.config.server.git:
+  uri: https://github.com/TheFreaky/spring-cloud-config-server-example
+  username: TheFreaky
+  password:
+  clone-on-start: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

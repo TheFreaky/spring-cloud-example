@@ -1,22 +1,20 @@
 package ru.kpfu.itis.cat.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.cat.config.property.MessagingProperties;
 import ru.kpfu.itis.cat.dto.CatDto;
 import ru.kpfu.itis.cat.service.CatService;
 
 @Component
+@RequiredArgsConstructor
 public class MessageService {
 
-    @Autowired
-    private CatService catService;
-    @Autowired
-    private MessagingProperties messagingProperties;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final CatService catService;
+    private final MessagingProperties messagingProperties;
+    private final RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = "${messaging.cat-creation.queue}")
     public void process(CatDto dto) {

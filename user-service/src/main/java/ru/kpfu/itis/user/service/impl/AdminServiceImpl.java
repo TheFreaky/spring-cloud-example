@@ -1,6 +1,6 @@
 package ru.kpfu.itis.user.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.user.model.User;
@@ -14,16 +14,12 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-    @Autowired
-    private UserBlacklistRepository userBlacklistRepository;
-
-    @Autowired
-    private UserTokenRepository userTokenRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final UserBlacklistRepository userBlacklistRepository;
+    private final UserTokenRepository userTokenRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional

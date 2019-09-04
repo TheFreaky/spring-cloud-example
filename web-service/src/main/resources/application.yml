@@ -1,7 +1,9 @@
 server.port: 8080
 
 spring.rabbitmq:
-  listener.simple.concurrency: 5
+  listener:
+    simple:
+      concurrency: 5
   username: guest
   password: guest
   host: rabbit
